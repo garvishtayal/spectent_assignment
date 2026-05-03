@@ -49,7 +49,7 @@ docker compose pull
 docker compose up -d
 ```
 
-Open `http://YOUR_VM_IP:8080`.
+Open `http://YOUR_VM_IP:8081`.
 
 **VM without the repo:** use a tiny compose file that only references the image (no `build:`):
 
@@ -58,7 +58,7 @@ services:
   web:
     image: yourdockerhub/spectent-feedback:latest
     ports:
-      - "8080:8080"
+      - "8081:8080"
 ```
 
 Then: `docker compose pull && docker compose up -d` in that folder.
