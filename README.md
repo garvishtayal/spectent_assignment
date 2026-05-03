@@ -24,26 +24,51 @@ cd frontend && npm install && npm run dev
 
 UI proxies `/feedback` to the API (Vite default: port **5173** → API **8080**).
 
-## Docker (build / VM)
+## Docker Hub → VM
 
-1. In **`docker-compose.yml`**, replace `yourdockerhub` with your Docker Hub username (lowercase).
-2. Build and push from your machine:
+Set **`yourdockerhub`** in `docker-compose.yml` to your Docker Hub username (lowercase), once.
+
+### On your laptop (build + push)
+
+From the repo root:
 
 ```bash
+docker login
 docker compose build
 docker compose push
 ```
 
-3. On the VM (same `docker-compose.yml`, or only the `image:` + `ports:` lines):
+### On the VM (pull + run)
+
+Put the same `docker-compose.yml` on the VM (e.g. `git clone` the repo, or `scp docker-compose.yml user@vm:`). Then:
 
 ```bash
+cd /path/to/spectent_assignment
+docker login
 docker compose pull
 docker compose up -d
 ```
 
-App: `http://YOUR_VM_IP:8080` (UI and `POST /feedback` on the same host).
+Open `http://YOUR_VM_IP:8080`.
 
-If the VM only has a compose file (no repo), drop the `build:` line and keep `image` + `ports`.
+**VM without the repo:** use a tiny compose file that only references the image (no `build:`):
+
+```yaml
+services:
+  web:
+    image: yourdockerhub/spectent-feedback:latest
+    ports:
+      - "8080:8080"
+```
+
+Then: `docker compose pull && docker compose up -d` in that folder.
+
+### Stop / logs
+
+```bash
+docker compose logs -f
+docker compose down
+```
 
 ## API
 
