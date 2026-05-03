@@ -2,6 +2,16 @@
 
 A small full-stack **feedback form**: React (JavaScript) frontend and **Go + Gin** API. Feedback is stored **in memory** (no database), matching the brief.
 
+![Feedback form UI](docs/screenshot.png)
+
+## Live demo
+
+Deploy the app with the included **Dockerfile** (one container serves the built SPA and the API on the same origin). Free options: [Render](https://render.com) (see `render.yaml`) or [Fly.io](https://fly.io) with the same image.
+
+**After you deploy, paste your public URL here** (example shape: `https://spectent-feedback.onrender.com`).
+
+Quick path on **Render**: New → **Web Service** → connect this GitHub repo → **Runtime: Docker** → leave defaults → Create. Render sets `PORT` automatically; the server reads it and serves the Vite build from `/` and `POST /feedback` on the same host.
+
 ## Purpose
 
 Users submit **name**, **email**, and **feedback**. The API validates input and keeps submissions in a process-local list for the assignment demo.
@@ -13,8 +23,11 @@ Users submit **name**, **email**, and **feedback**. The API validates input and 
 | Frontend | React 18, Vite, plain JS (no TypeScript)   |
 | Backend  | Go 1.22+, Gin                              |
 | Storage  | In-memory slice (lost on server restart)   |
+| Deploy   | Multi-stage **Dockerfile** (Node build → Go binary + static) |
 
 ## Run locally
+
+**Dev (hot reload + API proxy)**
 
 **Terminal 1 — API**
 
@@ -23,7 +36,7 @@ cd server
 go run .
 ```
 
-Server listens on **http://127.0.0.1:8080** — endpoint: `POST /feedback`.
+Server listens on **http://127.0.0.1:8080** — `POST /feedback` only, unless you add a static build (below).
 
 **Terminal 2 — UI**
 
@@ -33,17 +46,23 @@ npm install
 npm run dev
 ```
 
-Open the URL Vite prints (usually **http://127.0.0.1:5173**). The dev server proxies `/feedback` to the Go API, so CORS is not an issue during development.
+Open the URL Vite prints (usually **http://127.0.0.1:5173**). The dev server proxies `/feedback` to the Go API.
 
-**Production-style frontend build**
+**Single process (like production):** build the SPA into `server/static`, then run Go — the UI and API share **http://127.0.0.1:8080**.
 
 ```bash
-cd frontend
-npm run build
-npm run preview
+cd frontend && npm install && npm run build && rm -rf ../server/static && cp -r dist ../server/static
+cd ../server && go run .
 ```
 
-Point `vite.config.js` proxy at your API host if the backend is not on `8080`.
+**Docker (matches cloud deploy)**
+
+```bash
+docker build -t spectent-feedback .
+docker run --rm -p 8080:8080 spectent-feedback
+```
+
+Open **http://127.0.0.1:8080**.
 
 ## API
 

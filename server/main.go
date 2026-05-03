@@ -2,6 +2,8 @@ package main
 
 import (
 	"net/http"
+	"os"
+	"path/filepath"
 	"regexp"
 	"strings"
 	"sync"
@@ -104,7 +106,35 @@ func main() {
 
 	r.POST("/feedback", postFeedback)
 
-	if err := r.Run(":8080"); err != nil {
+	staticDir := os.Getenv("STATIC_DIR")
+	if staticDir == "" {
+		staticDir = "static"
+	}
+	mountStatic(r, staticDir)
+
+	addr := ":8080"
+	if p := os.Getenv("PORT"); p != "" {
+		addr = ":" + p
+	}
+	if err := r.Run(addr); err != nil {
 		panic(err)
 	}
+}
+
+func mountStatic(r *gin.Engine, dir string) {
+	fi, err := os.Stat(dir)
+	if err != nil || !fi.IsDir() {
+		return
+	}
+	assets := filepath.Join(dir, "assets")
+	if _, err := os.Stat(assets); err == nil {
+		r.Static("/assets", assets)
+	}
+	fav := filepath.Join(dir, "favicon.svg")
+	if _, err := os.Stat(fav); err == nil {
+		r.StaticFile("/favicon.svg", fav)
+	}
+	r.GET("/", func(c *gin.Context) {
+		c.File(filepath.Join(dir, "index.html"))
+	})
 }
