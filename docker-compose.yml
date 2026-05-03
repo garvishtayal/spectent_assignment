@@ -1,6 +1,6 @@
 services:
   web:
     build: .
-    image: yourdockerhub/spectent-feedback:latest
+    image: garvishtayal/spectent-feedback:latest
     ports:
       - "8080:8080"
