@@ -1,9 +1,0 @@
-# Blueprint for https://render.com — connect this repo and deploy as a Web Service (Docker).
-services:
-  - type: web
-    name: spectent-feedback
-    runtime: docker
-    dockerfilePath: ./Dockerfile
-    envVars:
-      - key: GIN_MODE
-        value: release
