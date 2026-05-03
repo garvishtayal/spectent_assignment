@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="">
+  <defs>
+    <linearGradient id="a" x1="20%" y1="0%" x2="80%" y2="100%">
+      <stop offset="0%" stop-color="#e3bc5e"/>
+      <stop offset="55%" stop-color="#8b7cf8"/>
+      <stop offset="100%" stop-color="#38bdf8"/>
+    </linearGradient>
+    <filter id="g" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="0.5" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="32" height="32" rx="9" fill="#08090e"/>
+  <rect x="1" y="1" width="30" height="30" rx="8" fill="none" stroke="rgba(255,255,255,0.06)"/>
+  <path
+    fill="url(#a)"
+    filter="url(#g)"
+    d="M9 10.5h14c1.1 0 2 .9 2 2v6.5c0 1.1-.9 2-2 2h-5.2L14 24v-3H9c-1.1 0-2-.9-2-2V12.5c0-1.1.9-2 2-2z"
+  />
+  <circle cx="12.5" cy="15.5" r="1.15" fill="#08090e" opacity="0.35"/>
+  <circle cx="16" cy="15.5" r="1.15" fill="#08090e" opacity="0.35"/>
+  <circle cx="19.5" cy="15.5" r="1.15" fill="#08090e" opacity="0.35"/>
+</svg>
